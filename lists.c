@@ -34,14 +34,14 @@ ls_t *add_node(ls_t **head, const char *str, int num)
 }
 
 /**
- * add_node_end - adds a node to the end of the list
+ * add_nd_end - adds a node to the end of the list
  * @head: address of pointer to head node
  * @str: str field of node
  * @num: node index used by history
  *
  * Return: size of list
  */
-ls_t *add_node_end(ls_t **head, const char *str, int num)
+ls_t *add_nd_end(ls_t **head, const char *str, int num)
 {
 	ls_t *new_node, *node;
 
@@ -75,12 +75,12 @@ ls_t *add_node_end(ls_t **head, const char *str, int num)
 }
 
 /**
- * print_list_str - prints only the str element of a ls_t linked list
+ * prt_lst_str - prints only the str element of a ls_t linked list
  * @h: pointer to first node
  *
  * Return: size of list
  */
-size_t print_list_str(const ls_t *h)
+size_t prt_lst_str(const ls_t *h)
 {
 	size_t i = 0;
 
@@ -95,13 +95,13 @@ size_t print_list_str(const ls_t *h)
 }
 
 /**
- * delete_node_at_index - deletes node at given index
+ * delt_nd_at_indx - deletes node at given index
  * @head: address of pointer to first node
  * @index: index of node to delete
  *
  * Return: 1 on success, 0 on failure
  */
-int delete_node_at_index(ls_t **head, unsigned int index)
+int delt_nd_at_indx(ls_t **head, unsigned int index)
 {
 	ls_t *node, *prev_node;
 	unsigned int i = 0;

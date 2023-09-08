@@ -36,7 +36,7 @@ int is_chain(infs_t *info, char *buf, size_t *p)
 }
 
 /**
- * check_chain - checks we should continue chaining based on last status
+ * test_chain - checks we should continue chaining based on last status
  * @info: the parameter struct
  * @buf: the char buffer
  * @p: address of current position in buf
@@ -45,7 +45,7 @@ int is_chain(infs_t *info, char *buf, size_t *p)
  *
  * Return: Void
  */
-void check_chain(infs_t *info, char *buf, size_t *p, size_t i, size_t len)
+void test_chain(infs_t *info, char *buf, size_t *p, size_t i, size_t len)
 {
 	size_t j = *p;
 
@@ -70,12 +70,12 @@ void check_chain(infs_t *info, char *buf, size_t *p, size_t i, size_t len)
 }
 
 /**
- * replace_alias - replaces an aliases in the tokenized string
+ * rplc_alias - replaces an aliases in the tokenized string
  * @info: the parameter struct
  *
  * Return: 1 if replaced, 0 otherwise
  */
-int replace_alias(infs_t *info)
+int rplc_alias(infs_t *info)
 {
 	int i;
 	ls_t *node;
@@ -99,12 +99,12 @@ int replace_alias(infs_t *info)
 }
 
 /**
- * replace_vars - replaces vars in the tokenized string
+ * mv_vars - replaces vars in the tokenized string
  * @info: the parameter struct
  *
  * Return: 1 if replaced, 0 otherwise
  */
-int replace_vars(infs_t *info)
+int mv_vars(infs_t *info)
 {
 	int i = 0;
 	ls_t *node;
@@ -116,37 +116,37 @@ int replace_vars(infs_t *info)
 
 		if (!is_strcmp(info->argv[i], "$?"))
 		{
-			replace_string(&(info->argv[i]),
+			mv_string(&(info->argv[i]),
 				_strdup(convert_number(info->status, 10, 0)));
 			continue;
 		}
 		if (!is_strcmp(info->argv[i], "$$"))
 		{
-			replace_string(&(info->argv[i]),
+			mv_string(&(info->argv[i]),
 				_strdup(convert_number(getpid(), 10, 0)));
 			continue;
 		}
 		node = node_starts_with(info->env, &info->argv[i][1], '=');
 		if (node)
 		{
-			replace_string(&(info->argv[i]),
+			mv_string(&(info->argv[i]),
 				_strdup(_strchr(node->str, '=') + 1));
 			continue;
 		}
-		replace_string(&info->argv[i], _strdup(""));
+		mv_string(&info->argv[i], _strdup(""));
 
 	}
 	return (0);
 }
 
 /**
- * replace_string - replaces string
+ * mv_string - replaces string
  * @old: address of old string
  * @new: new string
  *
  * Return: 1 if replaced, 0 otherwise
  */
-int replace_string(char **old, char *new)
+int mv_string(char **old, char *new)
 {
 	free(*old);
 	*old = new;
