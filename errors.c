@@ -29,9 +29,9 @@ void is_eputs(char *str)
 int is_erputchar(char c)
 {
 	static int i;
-	static char buf[WRITE_BUF_SIZE];
+	static char buf[WR_BUFF_SIZE];
 
-	if (c == BUFFER_FLSH || i >= WRITE_BUF_SIZE)
+	if (c == BUFFER_FLSH || i >= WR_BUFF_SIZE)
 	{
 		write(2, buf, i);
 		i = 0;
@@ -52,9 +52,9 @@ int is_erputchar(char c)
 int is__erputfd(char c, int fd)
 {
 	static int i;
-	static char buf[WRITE_BUF_SIZE];
+	static char buf[WR_BUFF_SIZE];
 
-	if (c == BUFFER_FLSH || i >= WRITE_BUF_SIZE)
+	if (c == BUFFER_FLSH || i >= WR_BUFF_SIZE)
 	{
 		write(fd, buf, i);
 		i = 0;

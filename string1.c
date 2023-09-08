@@ -74,9 +74,9 @@ void is_puts(char *str)
 int is_putchar(char c)
 {
 	static int i;
-	static char buf[WRITE_BUF_SIZE];
+	static char buf[WR_BUFF_SIZE];
 
-	if (c == BUFFER_FLSH || i >= WRITE_BUF_SIZE)
+	if (c == BUFFER_FLSH || i >= WR_BUFF_SIZE)
 	{
 		write(1, buf, i);
 		i = 0;
