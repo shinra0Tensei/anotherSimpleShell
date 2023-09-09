@@ -1,34 +1,6 @@
 #include "shell.h"
 
 /**
- * intrac_checker - returns true if the shell is in intractive mode
- *
- * @infs: struct address
- *
- * Return: 1 if intractive mode, 0 if not
- */
-int intrac_checker(infs_t *infs)
-{
-	return (isatty(STDIN_FILENO) && infs->read_fd <= 2);
-}
-
-/**
- * delimiter_check - checks if a delimeter
- *
- * @c: character to check
- * @delim: the delimeter
- *
- * Return: 1 in cas true, 0 if false
- */
-int delimiter_check(char ch, char *delimeter)
-{
-	while (*delimeter)
-		if (*delimeter++ == ch)
-			return (1);
-	return (0);
-}
-
-/**
  * _advatoi - converts a string to integer
  *
  * @str: the string to be converted
@@ -64,6 +36,34 @@ int _advatoi(char *str)
     return (number);
 }
 /**
+ * intrac_checker - returns true if the shell is in intractive mode
+ *
+ * @infs: struct address
+ *
+ * Return: 1 if intractive mode, 0 if not
+ */
+int intrac_checker(infs_t *infs)
+{
+	return (isatty(STDIN_FILENO) && infs->read_fd <= 2);
+}
+
+/**
+ * delimiter_check - checks if a delimeter
+ *
+ * @c: character to check
+ * @delim: the delimeter
+ *
+ * Return: 1 in cas true, 0 if false
+ */
+int delimiter_check(char ch, char *delimeter)
+{
+	while (*delimeter)
+		if (*delimeter++ == ch)
+			return (1);
+	return (0);
+}
+
+/**
  * _advisalpha - checks for characters
  *
  * @c: the input charcter
@@ -77,4 +77,3 @@ int _advisalpha(int c)
 	else
 		return (0);
 }
-
