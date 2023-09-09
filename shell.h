@@ -1,7 +1,7 @@
 #ifndef _SHELL_H_
 #define _SHELL_H_
 
-/* ===== LIBRARIES ===== */
+/* ==================== LIBRARIES ==================== */
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -13,7 +13,7 @@
 #include <sys/wait.h>
 #include <sys/stat.h>
 
-/* ===== CONSTANTS ===== */
+/* ==================== CONSTANTS ==================== */
 /* buffers */
 #define RD_BUFFER_SIZE 1024
 #define WR_BUFFER_SIZE 1024
@@ -40,7 +40,7 @@
 extern char **environ;
 
 
-/* ===== STRUCTURES ===== */
+/* ==================== STRUCTURES ==================== */
 /**
  * struct list_str - singly linked list
  *
@@ -113,7 +113,7 @@ typedef struct built_ins
 } builtins_t;
 
 
-/* ===== FUNCTIONS ===== */
+/* ==================== FUNCTIONS ==================== */
 /* printing functions*/
 void _advputs(char *);
 int _advputchar(char);
