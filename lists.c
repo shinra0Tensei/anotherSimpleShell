@@ -1,27 +1,27 @@
 #include "shell.h"
 
 /**
- * add_node - adds a node to the start of the list
+ * adding_node - adds a node to the start of the list
  * @head: address of pointer to head node
  * @str: str field of node
  * @num: node index used by history
  *
  * Return: size of list
  */
-ls_t *add_node(ls_t **head, const char *str, int num)
+list_t *adding_node(list_t **head, const char *str, int num)
 {
-	ls_t *new_head;
+	list_t *new_head;
 
 	if (!head)
 		return (NULL);
-	new_head = malloc(sizeof(ls_t));
+	new_head = malloc(sizeof(list_t));
 	if (!new_head)
 		return (NULL);
-	_memset((void *)new_head, 0, sizeof(ls_t));
+	_advmemseter((void *)new_head, 0, sizeof(list_t));
 	new_head->num = num;
 	if (str)
 	{
-		new_head->str = _strdup(str);
+		new_head->str = _advstrdup(str);
 		if (!new_head->str)
 		{
 			free(new_head);
@@ -34,29 +34,29 @@ ls_t *add_node(ls_t **head, const char *str, int num)
 }
 
 /**
- * add_nd_end - adds a node to the end of the list
+ * adding_nodeatend - adds a node to the end of the list
  * @head: address of pointer to head node
  * @str: str field of node
  * @num: node index used by history
  *
  * Return: size of list
  */
-ls_t *add_nd_end(ls_t **head, const char *str, int num)
+list_t *adding_nodeatend(list_t **head, const char *str, int num)
 {
-	ls_t *new_node, *node;
+	list_t *new_node, *node;
 
 	if (!head)
 		return (NULL);
 
 	node = *head;
-	new_node = malloc(sizeof(ls_t));
+	new_node = malloc(sizeof(list_t));
 	if (!new_node)
 		return (NULL);
-	_memset((void *)new_node, 0, sizeof(ls_t));
+	_advmemseter((void *)new_node, 0, sizeof(list_t));
 	new_node->num = num;
 	if (str)
 	{
-		new_node->str = _strdup(str);
+		new_node->str = _advstrdup(str);
 		if (!new_node->str)
 		{
 			free(new_node);
@@ -75,19 +75,19 @@ ls_t *add_nd_end(ls_t **head, const char *str, int num)
 }
 
 /**
- * prt_lst_str - prints only the str element of a ls_t linked list
+ * str_list_printing - prints only the str element of a list_t linked list
  * @h: pointer to first node
  *
  * Return: size of list
  */
-size_t prt_lst_str(const ls_t *h)
+size_t str_list_printing(const list_t *h)
 {
 	size_t i = 0;
 
 	while (h)
 	{
-		is_puts(h->str ? h->str : "(nil)");
-		is_puts("\n");
+		_advputs(h->str ? h->str : "(nil)");
+		_advputs("\n");
 		h = h->next;
 		i++;
 	}
@@ -95,15 +95,15 @@ size_t prt_lst_str(const ls_t *h)
 }
 
 /**
- * delt_nd_at_indx - deletes node at given index
+ * deleting_nodeatindex - deletes node at given index
  * @head: address of pointer to first node
  * @index: index of node to delete
  *
  * Return: 1 on success, 0 on failure
  */
-int delt_nd_at_indx(ls_t **head, unsigned int index)
+int deleting_nodeatindex(list_t **head, unsigned int index)
 {
-	ls_t *node, *prev_node;
+	list_t *node, *prev_node;
 	unsigned int i = 0;
 
 	if (!head || !*head)
@@ -135,14 +135,14 @@ int delt_nd_at_indx(ls_t **head, unsigned int index)
 }
 
 /**
- * free_list - frees all nodes of a list
+ * freing_list - frees all nodes of a list
  * @head_ptr: address of pointer to head node
  *
  * Return: void
  */
-void free_list(ls_t **head_ptr)
+void freing_list(list_t **head_ptr)
 {
-	ls_t *node, *next_node, *head;
+	list_t *node, *next_node, *head;
 
 	if (!head_ptr || !*head_ptr)
 		return;

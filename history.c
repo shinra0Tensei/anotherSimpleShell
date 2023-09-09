@@ -1,40 +1,40 @@
 #include "shell.h"
 
 /**
- * get_history_file - gets the history file
- * @info: parameter struct
+ * show_historyfile - gets the history file
+ * @infs: parameter struct
  *
  * Return: allocated string containg history file
  */
 
-char *get_history(infs_t *info)
+char *show_historyfile(infs_t *infs)
 {
 	char *buf, *dir;
 
-	dir = _getenv(info, "HOME=");
+	dir = _advgetenvir(infs, "HOME=");
 	if (!dir)
 		return (NULL);
-	buf = malloc(sizeof(char) * (is_strlen(dir) + is_strlen(HST_FILE) + 2));
+	buf = malloc(sizeof(char) * (_advstrlen(dir) + _advstrlen(HISTORY_FILE) + 2));
 	if (!buf)
 		return (NULL);
 	buf[0] = 0;
-	_strcpy(buf, dir);
-	_strcat(buf, "/");
-	_strcat(buf, HST_FILE);
+	_advstrcpy(buf, dir);
+	_advstrcat(buf, "/");
+	_advstrcat(buf, HISTORY_FILE);
 	return (buf);
 }
 
 /**
- * wrt_history - creates a file, or appends to an existing file
- * @info: the parameter struct
+ * wr_historyfile - creates a file, or appends to an existing file
+ * @infs: the parameter struct
  *
  * Return: 1 on success, else -1
  */
-int wrt_history(infs_t *info)
+int wr_historyfile(infs_t *infs)
 {
 	ssize_t fd;
-	char *filename = get_history_file(info);
-	ls_t *node = NULL;
+	char *filename = show_historyfile(infs);
+	list_t *node = NULL;
 
 	if (!filename)
 		return (-1);
@@ -43,28 +43,28 @@ int wrt_history(infs_t *info)
 	free(filename);
 	if (fd == -1)
 		return (-1);
-	for (node = info->history; node; node = node->next)
+	for (node = infs->history; node; node = node->next)
 	{
-		is_eris_putsfd(node->str, fd);
-		is__erputfd('\n', fd);
+		_prputs_fd(node->str, fd);
+		_prput_fd('\n', fd);
 	}
-	is__erputfd(BUFFER_FLSH, fd);
+	_prput_fd(FLUSH_BUFFER, fd);
 	close(fd);
 	return (1);
 }
 
 /**
- * read_hstry - reads history from file
- * @info: the parameter struct
+ * rd_historyfile - reads history from file
+ * @infs: the parameter struct
  *
  * Return: histcount on success, 0 otherwise
  */
-int read_hstry(infs_t *info)
+int rd_historyfile(infs_t *infs)
 {
 	int i, last = 0, linecount = 0;
 	ssize_t fd, rdlen, fsize = 0;
 	struct stat st;
-	char *buf = NULL, *filename = get_history_file(info);
+	char *buf = NULL, *filename = show_historyfile(infs);
 
 	if (!filename)
 		return (0);
@@ -89,49 +89,49 @@ int read_hstry(infs_t *info)
 		if (buf[i] == '\n')
 		{
 			buf[i] = 0;
-			build_hstry_lst(info, buf + last, linecount++);
+			list_historyfile(infs, buf + last, linecount++);
 			last = i + 1;
 		}
 	if (last != i)
-		build_hstry_lst(info, buf + last, linecount++);
+		list_historyfile(infs, buf + last, linecount++);
 	free(buf);
-	info->histcount = linecount;
-	while (info->histcount-- >= HST_MX)
-		delt_nd_at_indx(&(info->history), 0);
-	renum_hstry(info);
-	return (info->histcount);
+	infs->histcount = linecount;
+	while (infs->histcount-- >= HISTORY_MAXI)
+		deleting_nodeatindex(&(infs->history), 0);
+	renum_historyfile(infs);
+	return (infs->histcount);
 }
 
 /**
- * build_hstry_lst - adds entry to a history linked list
- * @info: Structure containing potential arguments. Used to maintain
+ * list_historyfile - adds entry to a history linked list
+ * @infs: Structure containing potential arguments. Used to maintain
  * @buf: buffer
  * @linecount: the history linecount, histcount
  *
  * Return: Always 0
  */
-int build_hstry_lst(infs_t *info, char *buf, int linecount)
+int list_historyfile(infs_t *infs, char *buf, int linecount)
 {
-	ls_t *node = NULL;
+	list_t *node = NULL;
 
-	if (info->history)
-		node = info->history;
-	add_nd_end(&node, buf, linecount);
+	if (infs->history)
+		node = infs->history;
+	adding_nodeatend(&node, buf, linecount);
 
-	if (!info->history)
-		info->history = node;
+	if (!infs->history)
+		infs->history = node;
 	return (0);
 }
 
 /**
- * renum_hstry - renumbers the history linked list after changes
- * @info: Structure containing potential arguments. Used to maintain
+ * renum_historyfile - renumbers the history linked list after changes
+ * @infs: Structure containing potential arguments. Used to maintain
  *
  * Return: the new histcount
  */
-int renum_hstry(infs_t *info)
+int renum_historyfile(infs_t *infs)
 {
-	ls_t *node = info->history;
+	list_t *node = infs->history;
 	int i = 0;
 
 	while (node)
@@ -139,5 +139,5 @@ int renum_hstry(infs_t *info)
 		node->num = i++;
 		node = node->next;
 	}
-	return (info->histcount = i);
+	return (infs->histcount = i);
 }

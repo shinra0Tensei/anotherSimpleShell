@@ -1,12 +1,12 @@
 #include "shell.h"
 
 /**
- * is_lst_len - determines length of linked list
+ * list_length - determines length of linked list
  * @h: pointer to first node
  *
  * Return: size of list
  */
-size_t is_lst_len(const ls_t *h)
+size_t list_length(const list_t *h)
 {
 	size_t i = 0;
 
@@ -19,15 +19,15 @@ size_t is_lst_len(const ls_t *h)
 }
 
 /**
- * ls_to_strings - returns an array of strings of the list->str
+ * lists_2_strings - returns an array of strings of the list->str
  * @head: pointer to first node
  *
  * Return: array of strings
  */
-char **lst_to_str(ls_t *head)
+char **lists_2_strings(list_t *head)
 {
-	ls_t *node = head;
-	size_t i = is_lst_len(head), j;
+	list_t *node = head;
+	size_t i = list_length(head), j;
 	char **strs;
 	char *str;
 
@@ -38,7 +38,7 @@ char **lst_to_str(ls_t *head)
 		return (NULL);
 	for (i = 0; node; node = node->next, i++)
 	{
-		str = malloc(is_strlen(node->str) + 1);
+		str = malloc(_advstrlen(node->str) + 1);
 		if (!str)
 		{
 			for (j = 0; j < i; j++)
@@ -47,7 +47,7 @@ char **lst_to_str(ls_t *head)
 			return (NULL);
 		}
 
-		str = _strcpy(str, node->str);
+		str = _advstrcpy(str, node->str);
 		strs[i] = str;
 	}
 	strs[i] = NULL;
@@ -56,22 +56,22 @@ char **lst_to_str(ls_t *head)
 
 
 /**
- * print_list - prints all elements of a ls_t linked list
+ * list_printing - prints all elements of a list_t linked list
  * @h: pointer to first node
  *
  * Return: size of list
  */
-size_t print_list(const ls_t *h)
+size_t list_printing(const list_t *h)
 {
 	size_t i = 0;
 
 	while (h)
 	{
-		is_puts(convert_number(h->num, 10, 0));
-		is_putchar(':');
-		is_putchar(' ');
-		is_puts(h->str ? h->str : "(nil)");
-		is_puts("\n");
+		_advputs(number_converter(h->num, 10, 0));
+		_advputchar(':');
+		_advputchar(' ');
+		_advputs(h->str ? h->str : "(nil)");
+		_advputs("\n");
 		h = h->next;
 		i++;
 	}
@@ -79,20 +79,20 @@ size_t print_list(const ls_t *h)
 }
 
 /**
- * node_starts_with - returns node whose string starts with prefix
+ * node_beggwith - returns node whose string starts with prefix
  * @node: pointer to list head
  * @prefix: string to match
  * @c: the next character after prefix to match
  *
  * Return: match node or null
  */
-ls_t *node_starts_with(ls_t *node, char *prefix, char c)
+list_t *node_beggwith(list_t *node, char *prefix, char c)
 {
 	char *p = NULL;
 
 	while (node)
 	{
-		p = starts_with(node->str, prefix);
+		p = begg_with(node->str, prefix);
 		if (p && ((c == -1) || (*p == c)))
 			return (node);
 		node = node->next;
@@ -101,13 +101,13 @@ ls_t *node_starts_with(ls_t *node, char *prefix, char c)
 }
 
 /**
- * get_node_index - gets the index of a node
+ * getting_nodeatindex - gets the index of a node
  * @head: pointer to list head
  * @node: pointer to the node
  *
  * Return: index of node or -1
  */
-ssize_t get_node_index(ls_t *head, ls_t *node)
+ssize_t getting_nodeatindex(list_t *head, list_t *node)
 {
 	size_t i = 0;
 

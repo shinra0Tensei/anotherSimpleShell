@@ -1,12 +1,12 @@
 #include "shell.h"
 
 /**
- * is_erratoi - converts a string to an integer
+ * _adverratoi - converts a string to an integer
  * @s: the string to be converted
  * Return: 0 if no numbers in string, converted number otherwise
  *       -1 on error
  */
-int is_erratoi(char *s)
+int _adverratoi(char *s)
 {
 	int i = 0;
 	unsigned long int result = 0;
@@ -29,42 +29,42 @@ int is_erratoi(char *s)
 }
 
 /**
- * is_print_error - prints an error message
- * @info: the parameter & return info struct
+ * error_printer - prints an error message
+ * @infs: the parameter & return infs struct
  * @estr: string containing specified error type
  * Return: 0 if no numbers in string, converted number otherwise
  *        -1 on error
  */
-void is_print_error(infs_t *info, char *estr)
+void error_printer(infs_t *infs, char *estr)
 {
-	is_eputs(info->fname);
-	is_eputs(": ");
-	is_print_d(info->line_count, STDERR_FILENO);
-	is_eputs(": ");
-	is_eputs(info->argv[0]);
-	is_eputs(": ");
-	is_eputs(estr);
+	_prputs(infs->file_name);
+	_prputs(": ");
+	decim_printer(infs->err_counter, STDERR_FILENO);
+	_prputs(": ");
+	_prputs(infs->argv[0]);
+	_prputs(": ");
+	_prputs(estr);
 }
 
 /**
- * is_print_d - function prints a decimal (integer) number (base 10)
+ * decim_printer - function prints a decimal (integer) number (base 10)
  * @input: the input
  * @fd: the filedescriptor to write to
  *
  * Return: number of characters printed
  */
-int is_print_d(int input, int fd)
+int decim_printer(int input, int fd)
 {
-	int (*_is_putchar)(char) = is_putchar;
+	int (*__putchar)(char) = _advputchar;
 	int i, count = 0;
 	unsigned int _abs_, current;
 
 	if (fd == STDERR_FILENO)
-		_is_putchar = is_erputchar;
+		__putchar = _prputchar;
 	if (input < 0)
 	{
 		_abs_ = -input;
-		_is_putchar('-');
+		__putchar('-');
 		count++;
 	}
 	else
@@ -74,26 +74,26 @@ int is_print_d(int input, int fd)
 	{
 		if (_abs_ / i)
 		{
-			_is_putchar('0' + current / i);
+			__putchar('0' + current / i);
 			count++;
 		}
 		current %= i;
 	}
-	_is_putchar('0' + current);
+	__putchar('0' + current);
 	count++;
 
 	return (count);
 }
 
 /**
- * convert_number - converter function, a clone of itoa
+ * number_converter - converter function, a clone of itoa
  * @num: number
  * @base: base
  * @flags: argument flags
  *
  * Return: string
  */
-char *cnvt_num(long int num, int base, int flags)
+char *number_converter(long int num, int base, int flags)
 {
 	static char *array;
 	static char buffer[50];
@@ -101,13 +101,13 @@ char *cnvt_num(long int num, int base, int flags)
 	char *ptr;
 	unsigned long n = num;
 
-	if (!(flags & CON_UNSD) && num < 0)
+	if (!(flags & UNSIGNED_CONV) && num < 0)
 	{
 		n = -num;
 		sign = '-';
 
 	}
-	array = flags & CON_LOW ? "0123456789abcdef" : "0123456789ABCDEF";
+	array = flags & LOWER_CONV ? "0123456789abcdef" : "0123456789ABCDEF";
 	ptr = &buffer[49];
 	*ptr = '\0';
 
@@ -122,12 +122,12 @@ char *cnvt_num(long int num, int base, int flags)
 }
 
 /**
- * is_remv_cmm - function replaces first instance of '#' with '\0'
+ * comment_deleter - function replaces first instance of '#' with '\0'
  * @buf: address of the string to modify
  *
  * Return: Always 0;
  */
-void is_remv_cmm(char *buf)
+void comment_deleter(char *buf)
 {
 	int i;
 

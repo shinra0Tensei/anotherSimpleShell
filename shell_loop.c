@@ -2,130 +2,130 @@
 
 /**
  * hsh - main shell loop
- * @info: the parameter & return info struct
+ * @infs: the parameter & return infs struct
  * @av: the argument vector from main()
  *
  * Return: 0 on success, 1 on error, or error code
  */
-int hsh(infs_t *info, char **av)
+int hsh(infs_t *infs, char **av)
 {
 	ssize_t r = 0;
 	int builtin_ret = 0;
 
 	while (r != -1 && builtin_ret != -2)
 	{
-		clear_info(info);
-		if (is_intrctv(info))
-			is_puts("$ ");
-		is_erputchar(BUFFER_FLSH);
-		r = is_get_input(info);
+		infos_clearer(infs);
+		if (intrac_checker(infs))
+			_advputs("$ ");
+		_prputchar(FLUSH_BUFFER);
+		r = input_req(infs);
 		if (r != -1)
 		{
-			set_info(info, av);
-			builtin_ret = find_bltn(info);
+			info_setter(infs, av);
+			builtin_ret = builtin_finder(infs);
 			if (builtin_ret == -1)
-				find_cmmd(info);
+				cmd_finder(infs);
 		}
-		else if (is_intrctv(info))
-			is_putchar('\n');
-		free_info(info, 0);
+		else if (intrac_checker(infs))
+			_advputchar('\n');
+		info_freer(infs, 0);
 	}
-	wrt_history(info);
-	free_info(info, 1);
-	if (!is_intrctv(info) && info->status)
-		exit(info->status);
+	wr_historyfile(infs);
+	info_freer(infs, 1);
+	if (!intrac_checker(infs) && infs->status)
+		exit(infs->status);
 	if (builtin_ret == -2)
 	{
-		if (info->err_num == -1)
-			exit(info->status);
-		exit(info->err_num);
+		if (infs->err_n == -1)
+			exit(infs->status);
+		exit(infs->err_n);
 	}
 	return (builtin_ret);
 }
 
 /**
- * find_bltn - finds a builtin command
- * @info: the parameter & return info struct
+ * builtin_finder - finds a builtin command
+ * @infs: the parameter & return infs struct
  *
  * Return: -1 if builtin not found,
  *			0 if builtin executed successfully,
  *			1 if builtin found but not successful,
  *			-2 if builtin signals exit()
  */
-int find_bltn(infs_t *info)
+int builtin_finder(infs_t *infs)
 {
 	int i, built_in_ret = -1;
-	bltn_tbl builtintbl[] = {
-		{"exit", is_exit},
-		{"env", is_env},
-		{"help", is_help},
-		{"history", is_history},
-		{"setenv", isis_setenv},
-		{"unsetenv", isis_myunsetenv},
-		{"cd", is_mycd},
-		{"alias", is_myalias},
+	builtins_t builtintbl[] = {
+		{"exit", exit_shell},
+		{"envi", show_envir},
+		{"help", get_help},
+		{"history", get_history},
+		{"setenv", set_envir},
+		{"unsetenv", unset_envir},
+		{"cd", chan_dir},
+		{"alias", get_alias},
 		{NULL, NULL}
 	};
 
 	for (i = 0; builtintbl[i].type; i++)
-		if (is_strcmp(info->argv[0], builtintbl[i].type) == 0)
+		if (_advstrcmp(infs->argv[0], builtintbl[i].type) == 0)
 		{
-			info->line_count++;
-			built_in_ret = builtintbl[i].func(info);
+			infs->err_counter++;
+			built_in_ret = builtintbl[i].func(infs);
 			break;
 		}
 	return (built_in_ret);
 }
 
 /**
- * find_cmmd - finds a command in PATH
- * @info: the parameter & return info struct
+ * cmd_finder - finds a command in PATH
+ * @infs: the parameter & return infs struct
  *
  * Return: void
  */
-void find_cmmd(infs_t *info)
+void cmd_finder(infs_t *infs)
 {
 	char *path = NULL;
 	int i, k;
 
-	info->path = info->argv[0];
-	if (info->linecount_flag == 1)
+	infs->path = infs->argv[0];
+	if (infs->line_count_flag == 1)
 	{
-		info->line_count++;
-		info->linecount_flag = 0;
+		infs->err_counter++;
+		infs->line_count_flag = 0;
 	}
-	for (i = 0, k = 0; info->arg[i]; i++)
-		if (!_delim(info->arg[i], " \t\n"))
+	for (i = 0, k = 0; infs->arg[i]; i++)
+		if (!delimiter_check(infs->arg[i], " \t\n"))
 			k++;
 	if (!k)
 		return;
 
-	path = find_path(info, _getenv(info, "PATH="), info->argv[0]);
+	path = path_finder(infs, _advgetenvir(infs, "PATH="), infs->argv[0]);
 	if (path)
 	{
-		info->path = path;
-		forks_cmd(info);
+		infs->path = path;
+		cmd_fork(infs);
 	}
 	else
 	{
-		if ((is_intrctv(info) || _getenv(info, "PATH=")
-			|| info->argv[0][0] == '/') && is_cmmd(info, info->argv[0]))
-			forks_cmd(info);
-		else if (*(info->arg) != '\n')
+		if ((intrac_checker(infs) || _advgetenvir(infs, "PATH=")
+			|| infs->argv[0][0] == '/') && cmd_check(infs, infs->argv[0]))
+			cmd_fork(infs);
+		else if (*(infs->arg) != '\n')
 		{
-			info->status = 127;
-			is_print_error(info, "not found\n");
+			infs->status = 127;
+			error_printer(infs, "not found\n");
 		}
 	}
 }
 
 /**
- * forks_cmd - forks a an exec thread to run cmd
- * @info: the parameter & return info struct
+ * cmd_fork - forks a an exec thread to run cmd
+ * @infs: the parameter & return infs struct
  *
  * Return: void
  */
-void forks_cmd(infs_t *info)
+void cmd_fork(infs_t *infs)
 {
 	pid_t child_pid;
 
@@ -138,9 +138,9 @@ void forks_cmd(infs_t *info)
 	}
 	if (child_pid == 0)
 	{
-		if (execve(info->path, info->argv, get_envn(info)) == -1)
+		if (execve(infs->path, infs->argv, get_envir(infs)) == -1)
 		{
-			free_info(info, 1);
+			info_freer(infs, 1);
 			if (errno == EACCES)
 				exit(126);
 			exit(1);
@@ -149,12 +149,12 @@ void forks_cmd(infs_t *info)
 	}
 	else
 	{
-		wait(&(info->status));
-		if (WIFEXITED(info->status))
+		wait(&(infs->status));
+		if (WIFEXITED(infs->status))
 		{
-			info->status = WEXITSTATUS(info->status);
-			if (info->status == 126)
-				is_print_error(info, "Permission denied\n");
+			infs->status = WEXITSTATUS(infs->status);
+			if (infs->status == 126)
+				error_printer(infs, "Permission denied\n");
 		}
 	}
 }

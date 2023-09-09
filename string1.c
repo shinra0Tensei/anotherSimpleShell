@@ -1,13 +1,13 @@
 #include "shell.h"
 
 /**
- * _strcpy - copies a string
+ * _advstrcpy - copies a string
  * @dest: the destination
  * @src: the source
  *
  * Return: pointer to destination
  */
-char *is_strcpy(char *dest, char *src)
+char *_advstrcpy(char *dest, char *src)
 {
 	int i = 0;
 
@@ -23,12 +23,12 @@ char *is_strcpy(char *dest, char *src)
 }
 
 /**
- * _strdup - duplicates a string
+ * _advstrdup - duplicates a string
  * @str: the string to duplicate
  *
  * Return: pointer to the duplicated string
  */
-char *is_strdup(const char *str)
+char *_advstrdup(const char *str)
 {
 	int length = 0;
 	char *ret;
@@ -46,12 +46,12 @@ char *is_strdup(const char *str)
 }
 
 /**
- *is_puts - prints an input string
+ *_advputs - prints an input string
  *@str: the string to be printed
  *
  * Return: Nothing
  */
-void is_puts(char *str)
+void _advputs(char *str)
 {
 	int i = 0;
 
@@ -59,29 +59,29 @@ void is_puts(char *str)
 		return;
 	while (str[i] != '\0')
 	{
-		is_putchar(str[i]);
+		_advputchar(str[i]);
 		i++;
 	}
 }
 
 /**
- * is_putchar - writes the character c to stdout
+ * _advputchar - writes the character c to stdout
  * @c: The character to print
  *
  * Return: On success 1.
  * On error, -1 is returned, and errno is set appropriately.
  */
-int is_putchar(char c)
+int _advputchar(char c)
 {
 	static int i;
-	static char buf[WR_BUFF_SIZE];
+	static char buf[WR_BUFFER_SIZE];
 
-	if (c == BUFFER_FLSH || i >= WR_BUFF_SIZE)
+	if (c == FLUSH_BUFFER || i >= WR_BUFFER_SIZE)
 	{
 		write(1, buf, i);
 		i = 0;
 	}
-	if (c != BUFFER_FLSH)
+	if (c != FLUSH_BUFFER)
 		buf[i++] = c;
 	return (1);
 }

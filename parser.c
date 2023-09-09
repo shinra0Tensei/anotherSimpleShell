@@ -1,17 +1,17 @@
 #include "shell.h"
 
 /**
- * is_cmmd - determines if a file is an executable command
- * @info: the info struct
+ * cmd_check - determines if a file is an executable command
+ * @infs: the infs struct
  * @path: path to the file
  *
  * Return: 1 if true, 0 otherwise
  */
-int is_cmmd(infs_t *info, char *path)
+int cmd_check(infs_t *infs, char *path)
 {
 	struct stat st;
 
-	(void)info;
+	(void)infs;
 	if (!path || stat(path, &st))
 		return (0);
 
@@ -23,14 +23,14 @@ int is_cmmd(infs_t *info, char *path)
 }
 
 /**
- * dup_chars - duplicates characters
+ * char_dupli - duplicates characters
  * @pathstr: the PATH string
  * @start: starting index
  * @stop: stopping index
  *
  * Return: pointer to new buffer
  */
-char *dups_char(char *pathstr, int start, int stop)
+char *char_dupli(char *pathstr, int start, int stop)
 {
 	static char buf[1024];
 	int i = 0, k = 0;
@@ -43,38 +43,38 @@ char *dups_char(char *pathstr, int start, int stop)
 }
 
 /**
- * find_path - finds this cmd in the PATH string
- * @info: the info struct
+ * path_finder - finds this cmd in the PATH string
+ * @infs: the infs struct
  * @pathstr: the PATH string
  * @cmd: the cmd to find
  *
  * Return: full path of cmd if found or NULL
  */
-char *find_path(infs_t *info, char *pathstr, char *cmd)
+char *path_finder(infs_t *infs, char *pathstr, char *cmd)
 {
 	int i = 0, curr_pos = 0;
 	char *path;
 
 	if (!pathstr)
 		return (NULL);
-	if ((is_strlen(cmd) > 2) && starts_with(cmd, "./"))
+	if ((_advstrlen(cmd) > 2) && begg_with(cmd, "./"))
 	{
-		if (is_cmmd(info, cmd))
+		if (cmd_check(infs, cmd))
 			return (cmd);
 	}
 	while (1)
 	{
 		if (!pathstr[i] || pathstr[i] == ':')
 		{
-			path = dup_chars(pathstr, curr_pos, i);
+			path = char_dupli(pathstr, curr_pos, i);
 			if (!*path)
-				_strcat(path, cmd);
+				_advstrcat(path, cmd);
 			else
 			{
-				_strcat(path, "/");
-				_strcat(path, cmd);
+				_advstrcat(path, "/");
+				_advstrcat(path, cmd);
 			}
-			if (is_cmmd(info, path))
+			if (cmd_check(infs, path))
 				return (path);
 			if (!pathstr[i])
 				break;

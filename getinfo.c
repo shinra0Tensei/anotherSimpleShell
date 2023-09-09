@@ -1,74 +1,74 @@
 #include "shell.h"
 
 /**
- * clear_info - initializes infs_t struct
- * @info: struct address
+ * infos_clearer - initializes infs_t struct
+ * @infs: struct address
  */
-void clear_info(infs_t *info)
+void infos_clearer(infs_t *infs)
 {
-	info->arg = NULL;
-	info->argv = NULL;
-	info->path = NULL;
-	info->argc = 0;
+	infs->arg = NULL;
+	infs->argv = NULL;
+	infs->path = NULL;
+	infs->argc = 0;
 }
 
 /**
- * set_info - initializes infs_t struct
- * @info: struct address
+ * info_setter - initializes infs_t struct
+ * @infs: struct address
  * @av: argument vector
  */
-void set_info(infs_t *info, char **av)
+void info_setter(infs_t *infs, char **av)
 {
 	int i = 0;
 
-	info->fname = av[0];
-	if (info->arg)
+	infs->file_name = av[0];
+	if (infs->arg)
 	{
-		info->argv = strtow(info->arg, " \t");
-		if (!info->argv)
+		infs->argv = strtowadv_A(infs->arg, " \t");
+		if (!infs->argv)
 		{
 
-			info->argv = malloc(sizeof(char *) * 2);
-			if (info->argv)
+			infs->argv = malloc(sizeof(char *) * 2);
+			if (infs->argv)
 			{
-				info->argv[0] = _strdup(info->arg);
-				info->argv[1] = NULL;
+				infs->argv[0] = _advstrdup(infs->arg);
+				infs->argv[1] = NULL;
 			}
 		}
-		for (i = 0; info->argv && info->argv[i]; i++)
+		for (i = 0; infs->argv && infs->argv[i]; i++)
 			;
-		info->argc = i;
+		infs->argc = i;
 
-		rplc_alias(info);
-		mv_vars(info);
+		alias_replacing(infs);
+		vars_replacing(infs);
 	}
 }
 
 /**
- * free_info - frees infs_t struct fields
- * @info: struct address
+ * info_freer - frees infs_t struct fields
+ * @infs: struct address
  * @all: true if freeing all fields
  */
-void free_info(infs_t *info, int all)
+void info_freer(infs_t *infs, int all)
 {
-	_ffree(info->argv);
-	info->argv = NULL;
-	info->path = NULL;
+	str_free(infs->argv);
+	infs->argv = NULL;
+	infs->path = NULL;
 	if (all)
 	{
-		if (!info->cmd_buf)
-			free(info->arg);
-		if (info->env)
-			free_list(&(info->env));
-		if (info->history)
-			free_list(&(info->history));
-		if (info->alias)
-			free_list(&(info->alias));
-		_ffree(info->envn);
-			info->envn = NULL;
-		is_bfree((void **)info->cmd_buf);
-		if (info->readfd > 2)
-			close(info->readfd);
-		is_putchar(BUFFER_FLSH);
+		if (!infs->cmd_buffer)
+			free(infs->arg);
+		if (infs->envi)
+			freing_list(&(infs->envi));
+		if (infs->history)
+			freing_list(&(infs->history));
+		if (infs->alias)
+			freing_list(&(infs->alias));
+		str_free(infs->environ);
+			infs->environ = NULL;
+		buff_ffree((void **)infs->cmd_buffer);
+		if (infs->read_fd > 2)
+			close(infs->read_fd);
+		_advputchar(FLUSH_BUFFER);
 	}
 }

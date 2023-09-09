@@ -1,32 +1,32 @@
 #include "shell.h"
 
 /**
- * is_env - prints the current envnment
- * @info: Structure containing potential arguments. Used to maintain
+ * show_envir - prints the current environment
+ * @infs: Structure containing potential arguments. Used to maintain
  *          constant function prototype.
  * Return: Always 0
  */
-int is_env(infs_t *info)
+int show_envir(infs_t *infs)
 {
-	prt_lst_str(info->env);
+	str_list_printing(infs->envi);
 	return (0);
 }
 
 /**
- * _getenv - gets the value of an envn variable
- * @info: Structure containing potential arguments. Used to maintain
- * @name: env var name
+ * _advgetenvir - gets the value of an environ variable
+ * @infs: Structure containing potential arguments. Used to maintain
+ * @name: envi var name
  *
  * Return: the value
  */
-char *is_getenv(infs_t *info, const char *name)
+char *_advgetenvir(infs_t *infs, const char *name)
 {
-	ls_t *node = info->env;
+	list_t *node = infs->envi;
 	char *p;
 
 	while (node)
 	{
-		p = starts_with(node->str, name);
+		p = begg_with(node->str, name);
 		if (p && *p)
 			return (p);
 		node = node->next;
@@ -35,58 +35,58 @@ char *is_getenv(infs_t *info, const char *name)
 }
 
 /**
- * isis_setenv - Initialize a new envnment variable,
+ * set_envir - Initialize a new environment variable,
  *             or modify an existing one
- * @info: Structure containing potential arguments. Used to maintain
+ * @infs: Structure containing potential arguments. Used to maintain
  *        constant function prototype.
  *  Return: Always 0
  */
-int isis_setenv(infs_t *info)
+int set_envir(infs_t *infs)
 {
-	if (info->argc != 3)
+	if (infs->argc != 3)
 	{
-		is_eputs("Incorrect number of arguements\n");
+		_prputs("Incorrect number of arguements\n");
 		return (1);
 	}
-	if (is_setenv(info, info->argv[1], info->argv[2]))
+	if (init_setenvir(infs, infs->argv[1], infs->argv[2]))
 		return (0);
 	return (1);
 }
 
 /**
- * isis_myunsetenv - Remove an envnment variable
- * @info: Structure containing potential arguments. Used to maintain
+ * unset_envir - Remove an environment variable
+ * @infs: Structure containing potential arguments. Used to maintain
  *        constant function prototype.
  *  Return: Always 0
  */
-int isis_myunsetenv(infs_t *info)
+int unset_envir(infs_t *infs)
 {
 	int i;
 
-	if (info->argc == 1)
+	if (infs->argc == 1)
 	{
-		is_eputs("Too few arguements.\n");
+		_prputs("Too few arguements.\n");
 		return (1);
 	}
-	for (i = 1; i <= info->argc; i++)
-		is_myunsetenv(info, info->argv[i]);
+	for (i = 1; i <= infs->argc; i++)
+		rem_unsetenvir(infs, infs->argv[i]);
 
 	return (0);
 }
 
 /**
- * is_poplt_env_list - populates env linked list
- * @info: Structure containing potential arguments. Used to maintain
+ * list_envir - populates envi linked list
+ * @infs: Structure containing potential arguments. Used to maintain
  *          constant function prototype.
  * Return: Always 0
  */
-int is_poplt_env_list(infs_t *info)
+int list_envir(infs_t *infs)
 {
-	ls_t *node = NULL;
+	list_t *node = NULL;
 	size_t i;
 
-	for (i = 0; envn[i]; i++)
-		add_nd_end(&node, envn[i], 0);
-	info->env = node;
+	for (i = 0; environ[i]; i++)
+		adding_nodeatend(&node, environ[i], 0);
+	infs->envi = node;
 	return (0);
 }

@@ -1,13 +1,13 @@
 #include "shell.h"
 
 /**
- * **str_tow - splits a string into words. Repeat delimiters are ignored
+ * **strtowadv_A - splits a string into words. Repeat delimiters are ignored
  * @str: the input string
  * @d: the delimeter string
  * Return: a pointer to an array of strings, or NULL on failure
  */
 
-char **str_tow(char *str, char *d)
+char **strtowadv_A(char *str, char *d)
 {
 	int i, j, k, m, numwords = 0;
 	char **s;
@@ -17,7 +17,7 @@ char **str_tow(char *str, char *d)
 	if (!d)
 		d = " ";
 	for (i = 0; str[i] != '\0'; i++)
-		if (!_delim(str[i], d) && (_delim(str[i + 1], d) || !str[i + 1]))
+		if (!delimiter_check(str[i], d) && (delimiter_check(str[i + 1], d) || !str[i + 1]))
 			numwords++;
 
 	if (numwords == 0)
@@ -27,10 +27,10 @@ char **str_tow(char *str, char *d)
 		return (NULL);
 	for (i = 0, j = 0; j < numwords; j++)
 	{
-		while (_delim(str[i], d))
+		while (delimiter_check(str[i], d))
 			i++;
 		k = 0;
-		while (!_delim(str[i + k], d) && str[i + k])
+		while (!delimiter_check(str[i + k], d) && str[i + k])
 			k++;
 		s[j] = malloc((k + 1) * sizeof(char));
 		if (!s[j])
@@ -49,12 +49,12 @@ char **str_tow(char *str, char *d)
 }
 
 /**
- * **str_tow2 - splits a string into words
+ * **strtowadv_B - splits a string into words
  * @str: the input string
  * @d: the delimeter
  * Return: a pointer to an array of strings, or NULL on failure
  */
-char **str_tow2(char *str, char d)
+char **strtowadv_B(char *str, char d)
 {
 	int i, j, k, m, numwords = 0;
 	char **s;
